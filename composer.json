@@ -1,0 +1,33 @@
+{
+    "name": "spayn/fpcustomcode",
+    "description": "PrestaShop module fpcustomcode",
+    "homepage": "https://github.com/Spayn/fpcustomcode",
+    "license": "MIT",
+    "type": "prestashop-module",
+    "authors": [
+        {
+            "name": "Serhii Fedorenko",
+            "email": "drserhii@gmail.com"
+        }
+    ],
+    "config": {
+        "platform": {
+            "php": "7.4.0"
+        },
+        "preferred-install": "dist",
+        "classmap-authoritative": true,
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "prepend-autoloader": false
+    },
+    "require-dev": {
+        "prestashop/php-dev-tools": "^4.3"
+    },
+    "autoload": {
+        "classmap": [
+            "fpcustomcode.php",
+            "controllers",
+            "classes"
+        ]
+    }
+}
