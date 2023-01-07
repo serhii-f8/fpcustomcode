@@ -6,6 +6,7 @@
  * Released under the MIT license
  * Date: 2022-11-06
  */
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -27,8 +28,8 @@ class FPCustomCode extends Module
     {
         $this->name = 'fpcustomcode';
         $this->tab = 'front_office_features';
-        $this->version = '0.0.1';
-        $this->author = 'Serhii Fedorenko';
+        $this->version = '1.0.0';
+        $this->author = 'FlexPik';
         $this->need_instance = 1;
         $this->bootstrap = true;
         parent::__construct();
@@ -86,6 +87,7 @@ class FPCustomCode extends Module
             || !Configuration::updateValue('FP_CUSTOM_CODE_GLOBAL_JS', '')
             || !$this->registerHook('displayHeader')
             || !$this->registerHook('displayBeforeBodyClosingTag')
+            || !$this->registerHook('displayBackOfficeHeader')
             || !$this->installTab()
         ) {
             $result = false;
@@ -124,7 +126,7 @@ class FPCustomCode extends Module
         $this->context->controller->addCSS($this->_path . 'views/css/admin.css');
         $this->initFieldsForm();
 
-        if (isset($_POST['save_custom_code'])) {
+        if (Tools::getValue('save_custom_code')) {
             foreach ($this->fieldsForm as $form) {
                 foreach ($form['form']['input'] as $field) {
                     if (isset($field['validation'])) {
@@ -400,5 +402,23 @@ class FPCustomCode extends Module
         }
 
         return $this->fetch($this->templateBody, $this->getCacheId($pageName));
+    }
+
+    /**
+     * Add the CSS & JavaScript files in BO.
+     */
+    public function hookDisplayBackOfficeHeader()
+    {
+        if (Tools::getValue('configure') === $this->name
+            || 'AdminCustomCodes' == $this->context->controller->controller_name ) {
+            $this->context->controller->addJS($this->_path.'views/lib/codemirror/codemirror.min.js');
+            $this->context->controller->addJS($this->_path.'views/lib/codemirror/mode/javascript.js');
+            $this->context->controller->addJS($this->_path.'views/lib/codemirror/mode/css.js');
+            $this->context->controller->addJS($this->_path.'views/js/back.js');
+
+            $this->context->controller->addCSS($this->_path.'views/lib/codemirror/codemirror.css');
+            $this->context->controller->addCSS($this->_path.'views/lib/codemirror/codemirror.css');
+            $this->context->controller->addCSS($this->_path.'views/css/back.css');
+        }
     }
 }
